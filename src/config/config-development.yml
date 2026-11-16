@@ -2,6 +2,16 @@ server:
   Port: 5005
   runMode: debug
 
+password:
+  minLength: 15
+  maxLength: 128
+  generateLength: 20
+  # Set a positive minimum to require a character class.
+  minUppercase: 0
+  minLowercase: 0
+  minDigits: 0
+  minSymbols: 0
+
 logger:
   filePath: ../logs/logs.log
   Encoding: json

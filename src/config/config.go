@@ -4,14 +4,30 @@ import (
 	"errors"
 	"log"
 	"os"
+
 	"github.com/spf13/viper"
 )
 
-
-type Config struct{
-	Server ServerConfig
+type Config struct {
+	Server   ServerConfig
 	Postgres PostgresConfig
-	Redis RedisConfig
+	Redis    RedisConfig
+	Cors     CorsConfig     `mapstructure:"cors"`
+	Password PasswordConfig `mapstructure:"password"`
+}
+
+type CorsConfig struct {
+	AllowOrigins string `mapstructure:"allowOrigins"`
+}
+
+type PasswordConfig struct {
+	MinLength      int `mapstructure:"minLength"`
+	MaxLength      int `mapstructure:"maxLength"`
+	GenerateLength int `mapstructure:"generateLength"`
+	MinUppercase   int `mapstructure:"minUppercase"`
+	MinLowercase   int `mapstructure:"minLowercase"`
+	MinDigits      int `mapstructure:"minDigits"`
+	MinSymbols     int `mapstructure:"minSymbols"`
 }
 
 type ServerConfig struct{
@@ -53,8 +69,14 @@ func GetConfig() *Config{
 	return config
 }
 
-func ParseConfig(v *viper.Viper) (*Config, error){
-	var config Config
+func ParseConfig(v *viper.Viper) (*Config, error) {
+	config := Config{
+		Password: PasswordConfig{
+			MinLength:      15,
+			MaxLength:      128,
+			GenerateLength: 20,
+		},
+	}
 	error := v.Unmarshal(&config)
 	if error != nil {
 		log.Printf("Unable to parse config: %v", error)
