@@ -22,6 +22,14 @@ func InitServer() {
 	}
 
 	r := gin.New()
+	registerValidators(passwordPolicy)
+	r.Use(gin.Logger(), gin.Recovery(), middlewares.CORS(cfg.Cors.AllowOrigins), middlewares.LimitByRequest())
+	registerRoutes(r)
+
+	r.Run(fmt.Sprintf(":%s", cfg.Server.Port))
+}
+
+func registerValidators(passwordPolicy *common.PasswordPolicy) {
 	validate, ok := binding.Validator.Engine().(*validator.Validate)
 	if ok {
 		validate.RegisterValidation("mobile", validations.IranianMobileNumberValidator, true)
@@ -29,12 +37,10 @@ func InitServer() {
 			log.Fatalf("register password validator: %v", err)
 		}
 	}
-	r.Use(gin.Logger(), gin.Recovery(), middlewares.CORS(cfg.Cors.AllowOrigins), middlewares.LimitByRequest())
+}
 
+func registerRoutes(r *gin.Engine) {
 	api := r.Group("api")
-
 	v1 := api.Group("/v1")
 	routers.HealthRouter(v1.Group("/health"))
-
-	r.Run(fmt.Sprintf(":%s", cfg.Server.Port))
 }
