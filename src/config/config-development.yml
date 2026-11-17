@@ -26,7 +26,10 @@ postgres:
   user: admin
   password: password
   dbName: car_sale_db
-  sslMode: false
+  sslMode: disable
+  MaxIdleConns: 15
+  MaxOpenConns: 100
+  ConnMaxLifetime: 5
 
 redis:
   host: localhost

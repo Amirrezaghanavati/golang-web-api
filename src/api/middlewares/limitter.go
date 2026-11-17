@@ -3,6 +3,7 @@ package middlewares
 import (
 	"net/http"
 
+	"github.com/Amirrezaghanavati/golang-web-api/api/helper"
 	"github.com/didip/tollbooth"
 	"github.com/gin-gonic/gin"
 )
@@ -13,9 +14,9 @@ func LimitByRequest() gin.HandlerFunc {
 		httpError := tollbooth.LimitByRequest(lmt, ctx.Writer, ctx.Request)
 
 		if httpError != nil {
-			ctx.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
-				"error": httpError.Error(),
-			})
+			ctx.AbortWithStatusJSON(http.StatusTooManyRequests,
+				helper.GenerateBaseResponseWithError(
+					nil, false, -100, httpError))
 			return
 		} else {
 			ctx.Next()

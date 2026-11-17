@@ -37,12 +37,15 @@ type ServerConfig struct {
 }
 
 type PostgresConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	DbName   string
-	SSLMode  bool
+	Host            string
+	Port            string
+	User            string
+	Password        string
+	DbName          string
+	SSLMode         string
+	MaxIdleConns    int
+	MaxOpenConns    int
+	ConnMaxLifetime time.Duration
 }
 
 type RedisConfig struct {
@@ -110,7 +113,7 @@ func LoadConfig(fileName string, fileType string) (*viper.Viper, error) {
 func getConfigPath(env string) string {
 	switch env {
 	case "docker":
-		return "config/config-docker"
+		return "../config/config.docker"
 	case "production":
 		return "config/config-production"
 	default:
