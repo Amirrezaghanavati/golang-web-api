@@ -10,7 +10,7 @@ services:
     volumes:
         - /data/postgres
     ports:
-        - "5432:5432"
+        - "127.0.0.1:5433:5432"
     networks: 
         - webapi_network
     restart: unless-stopped
