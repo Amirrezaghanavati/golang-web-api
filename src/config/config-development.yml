@@ -33,6 +33,8 @@ redis:
   port: 6379
   password: password
   db: 0
-  minIdleConnections: 100
-  poolSice: 5000
-  poolTimeout: 240
+  dealTimeout: 5
+  readTimeout: 5
+  writeTimeout: 5
+  poolSize : 10
+  poolTimeout : 15

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -30,31 +31,33 @@ type PasswordConfig struct {
 	MinSymbols     int `mapstructure:"minSymbols"`
 }
 
-type ServerConfig struct{
-	Port string
+type ServerConfig struct {
+	Port    string
 	RunMode string
 }
 
-type PostgresConfig struct{
-	Host string
-	Port string
-	User string
+type PostgresConfig struct {
+	Host     string
+	Port     string
+	User     string
 	Password string
-	DbName string
-	SSLMode bool
+	DbName   string
+	SSLMode  bool
 }
 
 type RedisConfig struct {
-	Host string
-	Post string
-	Password string
-	Db string
-	MinIdleConnections int
-	PoolSice int
-	PoolTimeout int
+	Host         string
+	Port         string
+	Password     string
+	Db           string
+	DeaiTimeout  time.Duration
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+	PoolSice     int
+	PoolTimeout  time.Duration
 }
 
-func GetConfig() *Config{
+func GetConfig() *Config {
 	configPath := getConfigPath(os.Getenv("APP_ENV"))
 	viper, error := LoadConfig(configPath, "yml")
 	if error != nil {
@@ -96,14 +99,13 @@ func LoadConfig(fileName string, fileType string) (*viper.Viper, error) {
 
 	if error != nil {
 		log.Printf("Unable to read config: %v", error)
-		if _, ok := error.(viper.ConfigFileNotFoundError); ok{
+		if _, ok := error.(viper.ConfigFileNotFoundError); ok {
 			return nil, errors.New("config file not found")
 		}
 		return nil, error
 	}
 	return v, nil
 }
-
 
 func getConfigPath(env string) string {
 	switch env {

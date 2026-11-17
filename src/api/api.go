@@ -14,8 +14,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func InitServer() {
-	cfg := config.GetConfig()
+func InitServer(cfg *config.Config) {
 	passwordPolicy, err := common.NewPasswordPolicy(common.PasswordRules(cfg.Password))
 	if err != nil {
 		log.Fatalf("invalid password configuration: %v", err)
